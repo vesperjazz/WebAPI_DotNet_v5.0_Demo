@@ -17,17 +17,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{BF73A6D4-9E54-4373-9FE9-E338F5CDB70B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI_DotNetCore_Demo.Common", "WebAPI_DotNetCore_Demo.Common\WebAPI_DotNetCore_Demo.Common.csproj", "{4ACB9E1F-7FF2-4A53-A9B6-4B48903D32E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI_DotNetCore_Demo.Common", "WebAPI_DotNetCore_Demo.Common\WebAPI_DotNetCore_Demo.Common.csproj", "{4ACB9E1F-7FF2-4A53-A9B6-4B48903D32E5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI_DotNetCore_Demo.Application", "WebAPI_DotNetCore_Demo.Application\WebAPI_DotNetCore_Demo.Application.csproj", "{75E542F9-D80B-4E62-88B2-BFA3B54E50A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI_DotNetCore_Demo.Application", "WebAPI_DotNetCore_Demo.Application\WebAPI_DotNetCore_Demo.Application.csproj", "{75E542F9-D80B-4E62-88B2-BFA3B54E50A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI_DotNetCore_Demo.Domain", "WebAPI_DotNetCore_Demo.Domain\WebAPI_DotNetCore_Demo.Domain.csproj", "{21A7D01A-EAFE-4943-A8A6-70A0559FE48A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI_DotNetCore_Demo.Domain", "WebAPI_DotNetCore_Demo.Domain\WebAPI_DotNetCore_Demo.Domain.csproj", "{21A7D01A-EAFE-4943-A8A6-70A0559FE48A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI_DotNetCore_Demo.Infrastructure", "WebAPI_DotNetCore_Demo.Infrastructure\WebAPI_DotNetCore_Demo.Infrastructure.csproj", "{3F7FCB89-03D4-45DA-9333-82FBFB4A425C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI_DotNetCore_Demo.Infrastructure", "WebAPI_DotNetCore_Demo.Infrastructure\WebAPI_DotNetCore_Demo.Infrastructure.csproj", "{3F7FCB89-03D4-45DA-9333-82FBFB4A425C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI_DotNetCore_Demo.Persistence", "WebAPI_DotNetCore_Demo.Persistence\WebAPI_DotNetCore_Demo.Persistence.csproj", "{3C2CF5FB-BE24-48C4-BB81-633ABC644455}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI_DotNetCore_Demo.Persistence", "WebAPI_DotNetCore_Demo.Persistence\WebAPI_DotNetCore_Demo.Persistence.csproj", "{3C2CF5FB-BE24-48C4-BB81-633ABC644455}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI_DotNetCore_Demo.Application.Tests", "WebAPI_DotNetCore_Demo.Application.Tests\WebAPI_DotNetCore_Demo.Application.Tests.csproj", "{3BA8B18B-85CD-4E19-958E-E253BF6D5EC3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI_DotNetCore_Demo.Application.Tests", "WebAPI_DotNetCore_Demo.Application.Tests\WebAPI_DotNetCore_Demo.Application.Tests.csproj", "{3BA8B18B-85CD-4E19-958E-E253BF6D5EC3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
