@@ -24,6 +24,8 @@ namespace WebAPI_DotNetCore_Demo.Persistence.Configurations
                 .IsRequired()
                 .HasMaxLength(20);
 
+            builder.Property(a => a.CountryID)
+                .IsRequired();
             builder.HasOne(pn => pn.Country)
                 .WithMany(c => c.PhoneNumbers)
                 .HasForeignKey(pn => pn.CountryID)
