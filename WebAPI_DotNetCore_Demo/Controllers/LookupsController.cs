@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+using WebAPI_DotNetCore_Demo.Application.DataTransferObjects.Lookups;
 using WebAPI_DotNetCore_Demo.Application.Persistence;
-using WebAPI_DotNetCore_Demo.Domain.Entities.Lookups;
+using WebAPI_DotNetCore_Demo.Application.Services.Interfaces;
 
 namespace WebAPI_DotNetCore_Demo.Controllers
 {
@@ -15,43 +15,35 @@ namespace WebAPI_DotNetCore_Demo.Controllers
     public class LookupsController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
-        public LookupsController(IUnitOfWork unitOfWork)
+        private readonly ILookupService _lookupService;
+        public LookupsController(IUnitOfWork unitOfWork, ILookupService lookupService)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _lookupService = lookupService ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 
         [HttpGet("countries")]
-        public async Task<ActionResult<IEnumerable<Country>>> GetAllCountriesAsync(CancellationToken cancellationToken = default)
+        public async Task<ActionResult<IEnumerable<CountryDto>>> GetAllCountriesAsync(CancellationToken cancellationToken = default)
         {
-            return (await _unitOfWork.CountryRepository.GetAllAsync(cancellationToken)).ToList();
+            return (await _lookupService.GetAllCountriesAsync(cancellationToken)).ToList();
         }
 
-        [HttpGet("countries/{ID}")]
-        public async Task<ActionResult<Country>> GetCountryByIDAsync(Guid ID, CancellationToken cancellationToken = default)
+        [HttpGet("countries/{countryID}")]
+        public async Task<ActionResult<CountryDto>> GetCountryByIDAsync(Guid countryID, CancellationToken cancellationToken = default)
         {
-            var country = await _unitOfWork.CountryRepository.GetAsync(ID, cancellationToken);
-
-            if (country is null)
-                return NotFound();
-            else
-                return country;
+            return await _lookupService.GetCountryByIDAsync(countryID, cancellationToken);
         }
 
         [HttpGet("genders")]
-        public async Task<ActionResult<IEnumerable<Gender>>> GetAllAsync(CancellationToken cancellationToken = default)
+        public async Task<ActionResult<IEnumerable<GenderDto>>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            return (await _unitOfWork.GenderRepository.GetAllAsync(cancellationToken)).ToList();
+            return (await _lookupService.GetAllGendersAsync(cancellationToken)).ToList();
         }
 
-        [HttpGet("genders/{ID}")]
-        public async Task<ActionResult<Gender>> GetGenderByIDAsync(Guid ID, CancellationToken cancellationToken = default)
+        [HttpGet("genders/{genderID}")]
+        public async Task<ActionResult<GenderDto>> GetGenderByIDAsync(Guid genderID, CancellationToken cancellationToken = default)
         {
-            var gender = await _unitOfWork.GenderRepository.GetAsync(ID, cancellationToken);
-
-            if (gender is null)
-                return NotFound();
-            else
-                return gender;
+            return await _lookupService.GetGenderByIDAsync(genderID, cancellationToken);
         }
     }
 }

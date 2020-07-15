@@ -27,12 +27,12 @@ namespace WebAPI_DotNetCore_Demo.Persistence.Repositories
                     .ThenInclude(pn => pn.Country);
         }
 
-        public async Task<IEnumerable<Person>> GetAllPersonWithDetails(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Person>> GetAllPersonWithDetailsAsync(CancellationToken cancellationToken = default)
         {
             return await QueryPersonWithDetails().ToListAsync(cancellationToken);
         }
 
-        public async Task<Person> GetPersonByIDWithDetails(Guid ID, CancellationToken cancellationToken = default)
+        public async Task<Person> GetPersonByIDWithDetailsAsync(Guid ID, CancellationToken cancellationToken = default)
         {
             return await QueryPersonWithDetails().SingleOrDefaultAsync(p => p.ID == ID, cancellationToken);
         }

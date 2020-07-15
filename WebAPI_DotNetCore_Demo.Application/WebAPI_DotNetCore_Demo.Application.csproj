@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\WebAPI_DotNetCore_Demo.Domain\WebAPI_DotNetCore_Demo.Domain.csproj" />
   </ItemGroup>
 

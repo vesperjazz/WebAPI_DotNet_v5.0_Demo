@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using WebAPI_DotNetCore_Demo.Application.DataTransferObjects;
 using WebAPI_DotNetCore_Demo.Application.Persistence;
-using WebAPI_DotNetCore_Demo.Domain.Entities;
+using WebAPI_DotNetCore_Demo.Application.Services.Interfaces;
 
 namespace WebAPI_DotNetCore_Demo.Controllers
 {
@@ -14,26 +15,23 @@ namespace WebAPI_DotNetCore_Demo.Controllers
     public class PersonsController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
-        public PersonsController(IUnitOfWork unitOfWork)
+        private readonly IPersonService _personService;
+        public PersonsController(IUnitOfWork unitOfWork, IPersonService personService)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _personService = personService ?? throw new ArgumentNullException(nameof(personService));
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Person>>> GetAllAsync(CancellationToken cancellationToken)
+        public async Task<ActionResult<IEnumerable<PersonDto>>> GetAllAsync(CancellationToken cancellationToken)
         {
-            return (await _unitOfWork.PersonRepository.GetAllPersonWithDetails(cancellationToken)).ToList();
+            return (await _personService.GetAllPersonsAsync(cancellationToken)).ToList();
         }
 
-        [HttpGet("{ID}")]
-        public async Task<ActionResult<Person>> GetByIDAsync(Guid ID, CancellationToken cancellationToken)
+        [HttpGet("{personID}")]
+        public async Task<ActionResult<PersonDto>> GetByIDAsync(Guid personID, CancellationToken cancellationToken)
         {
-            var person = await _unitOfWork.PersonRepository.GetPersonByIDWithDetails(ID, cancellationToken);
-
-            if (person is null)
-                return NotFound();
-            else
-                return person;
+            return await _personService.GetPersonByIDAsync(personID, cancellationToken);
         }
     }
 }
