@@ -44,11 +44,14 @@ namespace WebAPI_DotNetCore_Demo
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             // Install-Package AutoMapper.Extensions.Microsoft.DependencyInjection
-            // Mapping defines the depth of serialisation, gets rid of the reference loop error above.
+            // 1. Mapping defines the depth of serialisation, gets rid of the reference loop error above.
+            // 2. Abstracts away the real database structure.
+            // 3. Provides a more straight forward data transfer object required by each API.
             services.AddAutoMapper(Assembly.GetAssembly(typeof(ProfileBase)));
 
             // @TODO To implement a registration by assembly, i.e. no need for manual registration each
             // time a new service is added under the same assembly.
+            // Transient items should be stateless and lightweight.
             services.AddTransient<IPersonService, PersonService>();
             services.AddTransient<ILookupService, LookupService>();
         }

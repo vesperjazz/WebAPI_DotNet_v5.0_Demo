@@ -32,9 +32,34 @@ namespace WebAPI_DotNetCore_Demo.Persistence.Repositories
             return await QueryPersonWithDetails().ToListAsync(cancellationToken);
         }
 
-        public async Task<Person> GetPersonByIDWithDetailsAsync(Guid ID, CancellationToken cancellationToken = default)
+        public async Task<Person> GetPersonByIDWithDetailsAsync(Guid personID, CancellationToken cancellationToken = default)
         {
-            return await QueryPersonWithDetails().SingleOrDefaultAsync(p => p.ID == ID, cancellationToken);
+            return await QueryPersonWithDetails().SingleOrDefaultAsync(p => p.ID == personID, cancellationToken);
+        }
+
+        public void UpdatePersonName(Person person)
+        {
+            // Previous EF does not return EntityEntry<> upon attach.
+            //_context.Persons.Attach(person);
+            //_context.Entry(person).Property(p => p.FirstName).IsModified = true;
+            //_context.Entry(person).Property(p => p.LastName).IsModified = true;
+
+            // EFCore returns the EntityEntry<> upon attach, no need to retrieve again via _context.Entry()
+            var personEntityEntry = _context.Persons.Attach(person);
+            personEntityEntry.Property(p => p.FirstName).IsModified = true;
+            personEntityEntry.Property(p => p.LastName).IsModified = true;
+        }
+
+        public async Task DeletePersonWithDependentsByIDAsync(Guid personID, CancellationToken cancellationToken = default)
+        {
+            var person = await _context.Persons
+                .Include(p => p.PhoneNumbers)
+                .Include(p => p.Addresses)
+                .SingleAsync(p => p.ID == personID, cancellationToken);
+
+            _context.PhoneNumbers.RemoveRange(person.PhoneNumbers);
+            _context.Addresses.RemoveRange(person.Addresses);
+            _context.Persons.Remove(person);
         }
     }
 }

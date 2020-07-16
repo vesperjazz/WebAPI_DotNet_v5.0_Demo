@@ -19,5 +19,7 @@ namespace WebAPI_DotNetCore_Demo.Application.Persistence.Repositories
         Task<TEntity> GetAsync(Guid ID, CancellationToken cancellationToken = default);
         Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken = default);
         Task<IEnumerable<TEntity>> GetByAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
+        
+        void Update(TEntity entity);
     }
 }

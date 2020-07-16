@@ -18,6 +18,15 @@ namespace WebAPI_DotNetCore_Demo.Application.MappingProfiles
 
         protected override void MapDataTransferObjectToDomain()
         {
+            CreateMap<CreatePersonDto, Person>();
+            CreateMap<CreatePhoneNumberDto, PhoneNumber>();
+            CreateMap<CreateAddressDto, Address>();
+
+            CreateMap<UpdatePersonDto, Person>();
+            CreateMap<UpdatePhoneNumberDto, PhoneNumber>();
+            CreateMap<UpdateAddressDto, Address>();
+
+            CreateMap<UpdatePersonNameDto, Person>();
         }
     }
 }

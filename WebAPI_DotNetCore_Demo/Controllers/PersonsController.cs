@@ -33,5 +33,41 @@ namespace WebAPI_DotNetCore_Demo.Controllers
         {
             return await _personService.GetPersonByIDAsync(personID, cancellationToken);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> CreatePersonAsync([FromBody] CreatePersonDto createPersonDto, CancellationToken cancellationToken)
+        {
+            await _personService.CreatePersonAsync(createPersonDto, cancellationToken);
+            await _unitOfWork.CompleteAsync(cancellationToken);
+
+            return Ok();
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdatePersonAsync([FromBody] UpdatePersonDto updatePersonDto, CancellationToken cancellationToken)
+        {
+            _personService.UpdatePerson(updatePersonDto);
+            await _unitOfWork.CompleteAsync(cancellationToken);
+
+            return NoContent();
+        }
+
+        [HttpPatch]
+        public async Task<IActionResult> UpdatePersonBirthdayAsync([FromBody] UpdatePersonNameDto updatePersonNameDto, CancellationToken cancellationToken)
+        {
+            _personService.UpdatePersonName(updatePersonNameDto);
+            await _unitOfWork.CompleteAsync(cancellationToken);
+
+            return NoContent();
+        }
+
+        [HttpDelete("{personID}")]
+        public async Task<IActionResult> DeletePersonAsync(Guid personID, CancellationToken cancellationToken)
+        {
+            await _personService.DeletePersonByIDAsync(personID, cancellationToken);
+            await _unitOfWork.CompleteAsync(cancellationToken);
+
+            return NoContent();
+        }
     }
 }

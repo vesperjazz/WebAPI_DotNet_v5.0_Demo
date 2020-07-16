@@ -10,5 +10,9 @@ namespace WebAPI_DotNetCore_Demo.Application.Services.Interfaces
     {
         Task<PersonDto> GetPersonByIDAsync(Guid personID, CancellationToken cancellationToken = default);
         Task<IEnumerable<PersonDto>> GetAllPersonsAsync(CancellationToken cancellationToken = default);
+        Task CreatePersonAsync(CreatePersonDto createPersonDto, CancellationToken cancellationToken = default);
+        void UpdatePerson(UpdatePersonDto updatePersonDto);
+        void UpdatePersonName(UpdatePersonNameDto updatePersonNameDto);
+        Task DeletePersonByIDAsync(Guid personID, CancellationToken cancellationToken = default);
     }
 }

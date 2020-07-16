@@ -7,6 +7,7 @@ using WebAPI_DotNetCore_Demo.Application.DataTransferObjects;
 using WebAPI_DotNetCore_Demo.Application.Exceptions;
 using WebAPI_DotNetCore_Demo.Application.Persistence;
 using WebAPI_DotNetCore_Demo.Application.Services.Interfaces;
+using WebAPI_DotNetCore_Demo.Domain.Entities;
 
 namespace WebAPI_DotNetCore_Demo.Application.Services
 {
@@ -33,6 +34,38 @@ namespace WebAPI_DotNetCore_Demo.Application.Services
         {
             return _mapper.Map<IEnumerable<PersonDto>>(
                 await _unitOfWork.PersonRepository.GetAllPersonWithDetailsAsync(cancellationToken));
+        }
+
+        public async Task CreatePersonAsync(CreatePersonDto createPersonDto, CancellationToken cancellationToken = default)
+        {
+            var newPerson = _mapper.Map<Person>(createPersonDto);
+
+            await _unitOfWork.PersonRepository.AddAsync(newPerson, cancellationToken);
+        }
+
+        public void UpdatePerson(UpdatePersonDto updatePersonDto)
+        {
+            var updatedPerson = _mapper.Map<Person>(updatePersonDto);
+            _unitOfWork.PersonRepository.Update(updatedPerson);
+        }
+
+        public void UpdatePersonName(UpdatePersonNameDto updatePersonNameDto)
+        {
+            var updatedPerson = _mapper.Map<Person>(updatePersonNameDto);
+            _unitOfWork.PersonRepository.UpdatePersonName(updatedPerson);
+        }
+
+
+        public async Task DeletePersonByIDAsync(Guid personID, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                await _unitOfWork.PersonRepository.DeletePersonWithDependentsByIDAsync(personID, cancellationToken);
+            }
+            catch (InvalidOperationException ioex)
+            {
+                throw new NotFoundException($"Person with ID: [{personID}] is not found.", ioex);
+            }
         }
     }
 }
