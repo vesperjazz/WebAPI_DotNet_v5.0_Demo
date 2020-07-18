@@ -19,6 +19,8 @@
     <Compile Remove="Migrations\20200713073452_AddCheckContraintToPhoneNumberTable.Designer.cs" />
     <Compile Remove="Migrations\20200713073837_AddCheckContraintToAddressTable.cs" />
     <Compile Remove="Migrations\20200713073837_AddCheckContraintToAddressTable.Designer.cs" />
+    <Compile Remove="Migrations\20200718092158_AddAPILogTable.cs" />
+    <Compile Remove="Migrations\20200718092158_AddAPILogTable.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -16,6 +16,8 @@ namespace WebAPI_DotNetCore_Demo.Persistence
         public DbSet<PhoneNumber> PhoneNumbers { get; set; }
         public DbSet<Address> Addresses { get; set; }
 
+        public DbSet<APILog> APILogs { get; set; }
+
         public WebAPIDemoDbContext(DbContextOptions<WebAPIDemoDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

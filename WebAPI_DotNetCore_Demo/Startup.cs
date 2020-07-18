@@ -11,6 +11,7 @@ using WebAPI_DotNetCore_Demo.Application.MappingProfiles;
 using WebAPI_DotNetCore_Demo.Application.Persistence;
 using WebAPI_DotNetCore_Demo.Application.Services;
 using WebAPI_DotNetCore_Demo.Application.Services.Interfaces;
+using WebAPI_DotNetCore_Demo.Middlewares;
 using WebAPI_DotNetCore_Demo.Persistence;
 
 namespace WebAPI_DotNetCore_Demo
@@ -63,6 +64,8 @@ namespace WebAPI_DotNetCore_Demo
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseMiddleware<SerilogMiddleware>();
 
             app.UseRouting();
 
