@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Serilog;
 using System;
@@ -25,7 +27,7 @@ namespace WebAPI_DotNetCore_Demo.Middlewares
             _next = next ?? throw new ArgumentNullException(nameof(next));
         }
 
-        public async Task Invoke(HttpContext httpContext)
+        public async Task Invoke(HttpContext httpContext, IWebHostEnvironment env)
         {
             if (httpContext is null) { throw new ArgumentNullException(nameof(httpContext)); }
 
@@ -48,7 +50,7 @@ namespace WebAPI_DotNetCore_Demo.Middlewares
                 _responseBody = await GetBodyAsync(httpContext.Response);
                 _responseBody = string.IsNullOrWhiteSpace(_responseBody) ? null : _responseBody;
 
-                GetLoggerWithContext(httpContext, elapsedMs).Information(MessageTemplate,
+                GetLoggerWithContext(httpContext, elapsedMs, env.EnvironmentName).Information(MessageTemplate,
                     httpContext.Request.Method, GetPath(httpContext), httpContext.Response?.StatusCode, elapsedMs);
 
                 await responseBody.CopyToAsync(originalResponseBodyStream);
@@ -57,19 +59,22 @@ namespace WebAPI_DotNetCore_Demo.Middlewares
             {
                 var elapsedMs = GetElapsedMilliseconds(start, Stopwatch.GetTimestamp());
 
-                await ProcessHttpResponseForException(httpContext, ex);
+                if (!env.IsDevelopment()) { await ProcessHttpResponseForException(httpContext, ex); }
 
                 _responseBody = await GetBodyAsync(httpContext.Response);
                 _responseBody = string.IsNullOrWhiteSpace(_responseBody) ? null : _responseBody;
 
-                GetLoggerWithContext(httpContext, elapsedMs).Error(ex, MessageTemplate,
+                GetLoggerWithContext(httpContext, elapsedMs, env.EnvironmentName).Error(ex, MessageTemplate,
                     httpContext.Request.Method, GetPath(httpContext), httpContext.Response?.StatusCode, elapsedMs);
 
                 await responseBody.CopyToAsync(originalResponseBodyStream);
+
+                if (env.IsDevelopment()) { throw; }
             }
             finally
             {
                 responseBody.Dispose();
+                httpContext.Response.Body = originalResponseBodyStream;
             }
         }
 
@@ -104,18 +109,17 @@ namespace WebAPI_DotNetCore_Demo.Middlewares
             }
         }
 
-        private ILogger GetLoggerWithContext(HttpContext httpContext, double elapsedMs)
+        private ILogger GetLoggerWithContext(HttpContext httpContext, double elapsedMs, string environmentName)
         {
-            var result = Log.ForContext<SerilogMiddleware>()
+            return Log.ForContext<SerilogMiddleware>()
                 .ForContext("RequestMethod", httpContext.Request.Method)
                 .ForContext("RequestPath", GetPath(httpContext))
                 .ForContext("RequestBody", _requestBody, true)
                 .ForContext("ResponseStatusCode", httpContext.Response.StatusCode)
                 .ForContext("ResponseBody", _responseBody, true)
                 .ForContext("ElapsedMs", elapsedMs)
-                .ForContext("UserName", httpContext.User.Identity.Name);
-
-            return result;
+                .ForContext("UserName", httpContext.User.Identity.Name)
+                .ForContext("Environment", environmentName);
         }
 
         private static double GetElapsedMilliseconds(long start, long stop)

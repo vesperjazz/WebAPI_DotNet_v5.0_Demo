@@ -20,6 +20,9 @@ namespace WebAPI_DotNetCore_Demo.Persistence.Configurations
 
             builder.Property(al => al.UserName)
                 .HasMaxLength(100);
+
+            builder.Property(al => al.Environment)
+                .HasMaxLength(20);
         }
     }
 }
