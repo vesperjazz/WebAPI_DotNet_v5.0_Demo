@@ -15,8 +15,7 @@ namespace WebAPI_DotNetCore_Demo.Persistence.Configurations
                 .IsRequired();
 
             builder.Property(al => al.RequestMethod)
-                .HasMaxLength(10)
-                .IsRequired();
+                .HasMaxLength(10);
 
             builder.Property(al => al.UserName)
                 .HasMaxLength(100);

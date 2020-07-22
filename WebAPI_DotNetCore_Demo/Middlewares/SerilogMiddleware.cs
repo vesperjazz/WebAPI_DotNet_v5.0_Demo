@@ -69,6 +69,7 @@ namespace WebAPI_DotNetCore_Demo.Middlewares
 
                 await responseBody.CopyToAsync(originalResponseBodyStream);
 
+                // Duplicate logs may appear in the log table due to rethrows.
                 if (env.IsDevelopment()) { throw; }
             }
             finally

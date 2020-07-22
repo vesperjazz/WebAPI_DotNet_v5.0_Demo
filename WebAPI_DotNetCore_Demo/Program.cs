@@ -15,7 +15,7 @@ namespace WebAPI_DotNetCore_Demo
         {
             // Manual configuration is required at this point as the IConfiguration is
             // yet to be setup as seen in Startup.cs later in the application lifeline.
-            // It is important to note that appsettings.json must have reloadOnChange set 
+            // It is important to note that appsettings.json must have reloadOnChange set
             // to true, else the changes that are done during runtime will not take effect
             // until next application restart.
             var configuration = new ConfigurationBuilder()
@@ -44,6 +44,7 @@ namespace WebAPI_DotNetCore_Demo
             }
             finally
             {
+                Log.Information("Shutting down application.");
                 Log.CloseAndFlush();
             }
         }
@@ -77,13 +78,14 @@ namespace WebAPI_DotNetCore_Demo
                     new SqlColumn { ColumnName = "RequestMethod", DataType = System.Data.SqlDbType.NVarChar, DataLength = 10, AllowNull = true },
                     new SqlColumn { ColumnName = "RequestPath", DataType = System.Data.SqlDbType.NVarChar, DataLength = -1, AllowNull = true },
                     new SqlColumn { ColumnName = "RequestBody", DataType = System.Data.SqlDbType.NVarChar, DataLength = -1, AllowNull = true },
-                    new SqlColumn { ColumnName = "ResponseStatusCode", DataType = System.Data.SqlDbType.Int, AllowNull = false },
+                    new SqlColumn { ColumnName = "ResponseStatusCode", DataType = System.Data.SqlDbType.Int, AllowNull = true },
                     new SqlColumn { ColumnName = "ResponseBody", DataType = System.Data.SqlDbType.NVarChar, DataLength = -1, AllowNull = true },
                     new SqlColumn { ColumnName = "ElapsedMs", DataType = System.Data.SqlDbType.Float, AllowNull = true },
                     new SqlColumn { ColumnName = "UserName", DataType = System.Data.SqlDbType.NVarChar, DataLength = 100, AllowNull = true },
                     new SqlColumn { ColumnName = "MachineName", DataType = System.Data.SqlDbType.NVarChar, DataLength = 100, AllowNull = true },
                     new SqlColumn { ColumnName = "ProcessId", DataType = System.Data.SqlDbType.Int, AllowNull = false },
-                    new SqlColumn { ColumnName = "ThreadId", DataType = System.Data.SqlDbType.Int, AllowNull = false }
+                    new SqlColumn { ColumnName = "ThreadId", DataType = System.Data.SqlDbType.Int, AllowNull = false },
+                    new SqlColumn { ColumnName = "Environment", DataType = System.Data.SqlDbType.NVarChar, DataLength = 20, AllowNull = true }
                 }
             };
             columnOptions.Store.Remove(StandardColumn.Properties);
@@ -91,15 +93,21 @@ namespace WebAPI_DotNetCore_Demo
 
             // Install-Package Serilog.AspNetCore
             // Install-Package Serilog.Sinks.MSSqlServer
+            // Configuration of log levels can be leveraged from appsettings,
+            // but make sure the appsettings and the hardcoded settings below complement
+            // each other, else the sinks will be written to twice if they overlap.
             Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(configuration)
+                //.ReadFrom.Configuration(configuration) 
+                .MinimumLevel.Information()
+                .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning)
+                .MinimumLevel.Override("System", Serilog.Events.LogEventLevel.Warning)
                 .Enrich.FromLogContext()
                 .Enrich.WithMachineName() // Install-Package Serilog.Enrichers.Environment
                 .Enrich.WithProcessId()   // Install-Package Serilog.Enrichers.Process
                 .Enrich.WithThreadId()    // Install-Package Serilog.Enrichers.Thread
                 .WriteTo.Console()
                 .WriteTo.MSSqlServer(
-                    "Server=IVANCHIN-PC;Database=WebAPIDemo;User Id=sa; Password=password",
+                    configuration.GetConnectionString("WebAPIDemoDatabase"),
                     sinkOptions: sinkOptions,
                     columnOptions: columnOptions)
                 .CreateLogger();

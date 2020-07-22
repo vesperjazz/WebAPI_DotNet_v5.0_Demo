@@ -15,7 +15,7 @@ namespace WebAPI_DotNetCore_Demo.Domain.Entities
         public string RequestMethod { get; set; }
         public string RequestPath { get; set; }
         public string RequestBody { get; set; }
-        public int ResponseStatusCode { get; set; }
+        public int? ResponseStatusCode { get; set; }
         public string ResponseBody { get; set; }
         public double? ElapsedMs { get; set; }
 	    public string UserName { get; set; }
