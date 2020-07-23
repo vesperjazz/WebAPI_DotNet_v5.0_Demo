@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WebAPI_DotNetCore_Demo.Domain.Entities;
+using WebAPI_DotNetCore_Demo.Persistence.Extensions;
 
 namespace WebAPI_DotNetCore_Demo.Persistence.Configurations
 {
@@ -20,6 +21,8 @@ namespace WebAPI_DotNetCore_Demo.Persistence.Configurations
             builder.HasOne(p => p.Gender)
                 .WithMany(g => g.Persons)
                 .HasForeignKey(p => p.GenderID);
+
+            builder.BuildUserAuditColumns();
         }
     }
 }

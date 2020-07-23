@@ -16,5 +16,8 @@ namespace WebAPI_DotNetCore_Demo.Domain.Entities.Users
         public ICollection<UserRole> UserRoles { get; set; }
         public ICollection<User> CreateByUsers { get; set; }
         public ICollection<User> UpdateByUsers { get; set; }
+
+        public ICollection<Person> CreateByPersons { get; set; }
+        public ICollection<Person> UpdateByPersons { get; set; }
     }
 }

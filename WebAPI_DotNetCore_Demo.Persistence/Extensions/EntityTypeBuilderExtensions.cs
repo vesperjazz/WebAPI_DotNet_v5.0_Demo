@@ -15,9 +15,9 @@ namespace WebAPI_DotNetCore_Demo.Persistence.Extensions
                 .IsRequired();
 
             builder.HasOne(u => u.CreateByUser)
-                .WithMany("CreateByUsers")
+                .WithMany($"CreateBy{typeof(TEntity).Name}s")
                 .HasForeignKey(u => u.CreateByUserID)
-                .HasConstraintName($"FK_{typeof(TEntity).Name}s_CreateByUsers")
+                .HasConstraintName($"FK_{typeof(TEntity).Name}s_CreateBy{typeof(TEntity).Name}s")
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.Property(u => u.UpdateDate)
@@ -27,9 +27,9 @@ namespace WebAPI_DotNetCore_Demo.Persistence.Extensions
                 .IsRequired();
 
             builder.HasOne(u => u.UpdateByUser)
-                .WithMany("UpdateByUsers")
+                .WithMany($"UpdateBy{typeof(TEntity).Name}s")
                 .HasForeignKey(u => u.UpdateByUserID)
-                .HasConstraintName($"FK_{typeof(TEntity).Name}s_UpdateByUsers")
+                .HasConstraintName($"FK_{typeof(TEntity).Name}s_UpdateBy{typeof(TEntity).Name}s")
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }
