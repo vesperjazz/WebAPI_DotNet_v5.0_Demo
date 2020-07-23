@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI_DotNetCore_Demo.Persistence;
 
 namespace WebAPI_DotNetCore_Demo.Persistence.Migrations
 {
     [DbContext(typeof(WebAPIDemoDbContext))]
-    partial class WebAPIDemoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200723073114_AddUserAndRoleTables")]
+    partial class AddUserAndRoleTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

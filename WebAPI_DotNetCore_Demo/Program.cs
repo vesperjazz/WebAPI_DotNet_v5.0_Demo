@@ -6,6 +6,7 @@ using Serilog.Sinks.MSSqlServer;
 using Serilog.Sinks.MSSqlServer.Sinks.MSSqlServer.Options;
 using System;
 using System.Collections.ObjectModel;
+using WebAPI_DotNetCore_Demo.Extensions;
 
 namespace WebAPI_DotNetCore_Demo
 {
@@ -36,6 +37,7 @@ namespace WebAPI_DotNetCore_Demo
 
                 CreateHostBuilder(args)
                     .Build()
+                    .InitialiseDatabase()
                     .Run();
             }
             catch (Exception ex)

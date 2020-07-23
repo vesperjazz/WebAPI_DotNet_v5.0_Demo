@@ -5,25 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20200713035326_InitialCreate.cs" />
-    <Compile Remove="Migrations\20200713035326_InitialCreate.Designer.cs" />
-    <Compile Remove="Migrations\20200713061359_InitialCreate.cs" />
-    <Compile Remove="Migrations\20200713061359_InitialCreate.Designer.cs" />
-    <Compile Remove="Migrations\20200713070011_AddedCheckContraintToPhoneNumberTable.cs" />
-    <Compile Remove="Migrations\20200713070011_AddedCheckContraintToPhoneNumberTable.Designer.cs" />
-    <Compile Remove="Migrations\20200713070942_AddCheckContraintToAddressTable.cs" />
-    <Compile Remove="Migrations\20200713070942_AddCheckContraintToAddressTable.Designer.cs" />
-    <Compile Remove="Migrations\20200713071019_Test.cs" />
-    <Compile Remove="Migrations\20200713071019_Test.Designer.cs" />
-    <Compile Remove="Migrations\20200713073452_AddCheckContraintToPhoneNumberTable.cs" />
-    <Compile Remove="Migrations\20200713073452_AddCheckContraintToPhoneNumberTable.Designer.cs" />
-    <Compile Remove="Migrations\20200713073837_AddCheckContraintToAddressTable.cs" />
-    <Compile Remove="Migrations\20200713073837_AddCheckContraintToAddressTable.Designer.cs" />
-    <Compile Remove="Migrations\20200718092158_AddAPILogTable.cs" />
-    <Compile Remove="Migrations\20200718092158_AddAPILogTable.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.6" />

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WebAPI_DotNetCore_Demo.Domain.Entities;
 using WebAPI_DotNetCore_Demo.Domain.Entities.Lookups;
+using WebAPI_DotNetCore_Demo.Domain.Entities.Users;
 using WebAPI_DotNetCore_Demo.Persistence.Extensions;
 
 namespace WebAPI_DotNetCore_Demo.Persistence
@@ -15,6 +16,10 @@ namespace WebAPI_DotNetCore_Demo.Persistence
         public DbSet<Person> Persons { get; set; }
         public DbSet<PhoneNumber> PhoneNumbers { get; set; }
         public DbSet<Address> Addresses { get; set; }
+
+        public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
 
         // https://github.com/serilog/serilog-sinks-mssqlserver
         // I have chosen to create the APILog table ahead of time, instead of allowing Serilog
