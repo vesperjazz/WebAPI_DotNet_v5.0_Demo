@@ -91,9 +91,20 @@ namespace WebAPI_DotNetCore_Demo.Middlewares
                 httpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
 
                 await httpContext.Response.WriteAsync(
-                    JsonConvert.SerializeObject(new 
+                    JsonConvert.SerializeObject(new
                     {
                         HttpStatusCode = HttpStatusCode.NotFound,
+                        ErrorMessage = exception.Message
+                    }));
+            }
+            else if (exception is IncorrectPasswordException)
+            {
+                httpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+
+                await httpContext.Response.WriteAsync(
+                    JsonConvert.SerializeObject(new
+                    {
+                        HttpStatusCode = HttpStatusCode.Unauthorized,
                         ErrorMessage = exception.Message
                     }));
             }

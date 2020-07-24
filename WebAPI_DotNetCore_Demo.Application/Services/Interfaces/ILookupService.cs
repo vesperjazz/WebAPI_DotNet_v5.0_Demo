@@ -12,5 +12,7 @@ namespace WebAPI_DotNetCore_Demo.Application.Services.Interfaces
         Task<IEnumerable<GenderDto>> GetAllGendersAsync(CancellationToken cancellationToken = default);
         Task<CountryDto> GetCountryByIDAsync(Guid countryID, CancellationToken cancellationToken = default);
         Task<IEnumerable<CountryDto>> GetAllCountriesAsync(CancellationToken cancellationToken = default);
+        Task<RoleDto> GetRoleByIDAsync(Guid roleID, CancellationToken cancellationToken = default);
+        Task<IEnumerable<RoleDto>> GetAllRolesAsync(CancellationToken cancellationToken = default);
     }
 }

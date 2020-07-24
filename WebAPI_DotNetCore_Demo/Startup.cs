@@ -1,23 +1,35 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System.Reflection;
+using System.Reflection.Metadata;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
 using WebAPI_DotNetCore_Demo.Application.MappingProfiles;
 using WebAPI_DotNetCore_Demo.Application.Persistence;
 using WebAPI_DotNetCore_Demo.Application.Services;
 using WebAPI_DotNetCore_Demo.Application.Services.Interfaces;
 using WebAPI_DotNetCore_Demo.Middlewares;
+using WebAPI_DotNetCore_Demo.Options;
 using WebAPI_DotNetCore_Demo.Persistence;
 
 namespace WebAPI_DotNetCore_Demo
 {
     public class Startup
     {
+        private const string AccessToken = "AccessToken";
+        private const string JwtSettingsSection = "JwtSettings";
+        private const string ConnectionStringSection = "WebAPIDemoDatabase";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -28,6 +40,8 @@ namespace WebAPI_DotNetCore_Demo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<JwtSettings>(Configuration.GetSection(JwtSettingsSection));
+
             // To fix the following JsonException -> Install-Package Microsoft.AspNetCore.Mvc.NewtonsoftJson
             // JsonException: A possible object cycle was detected which is not supported. 
             // This can either be due to a cycle or if the object depth is larger than the maximum allowed depth of 32.
@@ -38,7 +52,7 @@ namespace WebAPI_DotNetCore_Demo
             // DbContext needs to be scoped as we want the container to return the same instance of DbContext
             // for all possible injections in the scope of each HttpRequest.
             services.AddDbContext<WebAPIDemoDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("WebAPIDemoDatabase")),
+                options.UseSqlServer(Configuration.GetConnectionString(ConnectionStringSection)),
                 ServiceLifetime.Scoped);
 
             // Similarly, the UnitOfWork is a wrapper for DbContext, so it should be scoped as well.
@@ -55,6 +69,41 @@ namespace WebAPI_DotNetCore_Demo
             // Transient items should be stateless and lightweight.
             services.AddTransient<IPersonService, PersonService>();
             services.AddTransient<ILookupService, LookupService>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IJwtTokenService, JwtTokenService>();
+            services.AddTransient<IPasswordService, PasswordService>();
+            services.AddTransient<ISystemClock, SystemClock>();
+            services.AddTransient<HMAC, HMACSHA512>();
+
+            // Install-Package Microsoft.AspNetCore.Authentication.JwtBearer
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+                {
+                    var jwtSettings = Configuration.GetSection(JwtSettingsSection).Get<JwtSettings>();
+                    var issuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSettings.Secret));
+
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = jwtSettings.Issuer,
+                        ValidAudience = jwtSettings.Audience,
+                        ValidateIssuer = jwtSettings.IsValidateIssuer,
+                        ValidateAudience = jwtSettings.IsValidateAudience,
+                        IssuerSigningKey = issuerSigningKey
+                    };
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = (messageReceivedContext) =>
+                        {
+                            // Allows the AccessToken to be passed as query string parameter.
+                            if (messageReceivedContext.Request.Query.ContainsKey(AccessToken))
+                            {
+                                messageReceivedContext.Token = messageReceivedContext.Request.Query[AccessToken];
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,6 +117,8 @@ namespace WebAPI_DotNetCore_Demo
             app.UseMiddleware<SerilogMiddleware>();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

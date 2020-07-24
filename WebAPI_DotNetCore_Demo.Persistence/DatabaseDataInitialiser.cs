@@ -16,7 +16,7 @@ namespace WebAPI_DotNetCore_Demo.Persistence
         {
             if (context.Users.Any()) { return; }
 
-            var userID = Guid.NewGuid();
+            var userID = new Guid("9338B511-C135-41A9-9ACE-48211DB19BE9");
             var currentDateTime = DateTime.Now;
             var (Salt, Hash) = CreatePasswordHash("jrrtolkien");
 

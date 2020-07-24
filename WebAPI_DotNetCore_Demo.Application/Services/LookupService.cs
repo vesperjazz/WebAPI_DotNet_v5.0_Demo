@@ -49,5 +49,20 @@ namespace WebAPI_DotNetCore_Demo.Application.Services
             return _mapper.Map<IEnumerable<CountryDto>>(
                 await _unitOfWork.CountryRepository.GetAllAsync(cancellationToken));
         }
+
+        public async Task<RoleDto> GetRoleByIDAsync(Guid roleID, CancellationToken cancellationToken = default)
+        {
+            var role = await _unitOfWork.RoleRepository.GetAsync(roleID, cancellationToken);
+
+            if(role is null) { throw new NotFoundException($"Role with ID: [{roleID}] is not found."); }
+
+            return _mapper.Map<RoleDto>(role);
+        }
+
+        public async Task<IEnumerable<RoleDto>> GetAllRolesAsync(CancellationToken cancellationToken = default)
+        {
+            return _mapper.Map<IEnumerable<RoleDto>>(
+                await _unitOfWork.RoleRepository.GetAllAsync(cancellationToken));
+        }
     }
 }

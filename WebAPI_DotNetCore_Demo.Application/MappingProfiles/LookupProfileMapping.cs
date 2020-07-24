@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using WebAPI_DotNetCore_Demo.Application.DataTransferObjects.Lookups;
 using WebAPI_DotNetCore_Demo.Domain.Entities.Lookups;
+using WebAPI_DotNetCore_Demo.Domain.Entities.Users;
 
 namespace WebAPI_DotNetCore_Demo.Application.MappingProfiles
 {
@@ -10,6 +11,7 @@ namespace WebAPI_DotNetCore_Demo.Application.MappingProfiles
         {
             CreateMap<Gender, GenderDto>();
             CreateMap<Country, CountryDto>();
+            CreateMap<Role, RoleDto>();
         }
 
         protected override void MapDataTransferObjectToDomain()

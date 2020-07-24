@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ using WebAPI_DotNetCore_Demo.Application.Services.Interfaces;
 
 namespace WebAPI_DotNetCore_Demo.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class PersonsController : ControllerBase
