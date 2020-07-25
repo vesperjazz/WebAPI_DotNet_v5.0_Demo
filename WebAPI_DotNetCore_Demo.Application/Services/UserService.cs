@@ -89,5 +89,16 @@ namespace WebAPI_DotNetCore_Demo.Application.Services
                 IsActive = false
             });
         }
+
+        public async Task CreateUserAsync(CreateUserDto createUserDto, CancellationToken cancellationToken = default)
+        {
+            var newUser = _mapper.Map<User>(createUserDto);
+            var (salt, hash) = _passwordService.CreatePasswordHash(createUserDto.Password);
+
+            newUser.PasswordSalt = salt;
+            newUser.PasswordHash = hash;
+
+            await _unitOfWork.UserRepository.AddAsync(newUser, cancellationToken);
+        }
     }
 }

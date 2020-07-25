@@ -40,7 +40,7 @@ namespace WebAPI_DotNetCore_Demo.Controllers
         public async Task<IActionResult> CreatePersonAsync([FromBody] CreatePersonDto createPersonDto, CancellationToken cancellationToken)
         {
             await _personService.CreatePersonAsync(createPersonDto, cancellationToken);
-            await _unitOfWork.CompleteAsync(cancellationToken);
+            await _unitOfWork.CompleteWithAuditAsync(cancellationToken);
 
             return Ok();
         }
@@ -49,7 +49,7 @@ namespace WebAPI_DotNetCore_Demo.Controllers
         public async Task<IActionResult> UpdatePersonAsync([FromBody] UpdatePersonDto updatePersonDto, CancellationToken cancellationToken)
         {
             _personService.UpdatePerson(updatePersonDto);
-            await _unitOfWork.CompleteAsync(cancellationToken);
+            await _unitOfWork.CompleteWithAuditAsync(cancellationToken);
 
             return NoContent();
         }
@@ -58,7 +58,7 @@ namespace WebAPI_DotNetCore_Demo.Controllers
         public async Task<IActionResult> UpdatePersonBirthdayAsync([FromBody] UpdatePersonNameDto updatePersonNameDto, CancellationToken cancellationToken)
         {
             _personService.UpdatePersonName(updatePersonNameDto);
-            await _unitOfWork.CompleteAsync(cancellationToken);
+            await _unitOfWork.CompleteWithAuditAsync(cancellationToken);
 
             return NoContent();
         }
@@ -67,6 +67,8 @@ namespace WebAPI_DotNetCore_Demo.Controllers
         public async Task<IActionResult> DeletePersonAsync(Guid personID, CancellationToken cancellationToken)
         {
             await _personService.DeletePersonByIDAsync(personID, cancellationToken);
+
+            // No need for audit columns changes for hard delete.
             await _unitOfWork.CompleteAsync(cancellationToken);
 
             return NoContent();

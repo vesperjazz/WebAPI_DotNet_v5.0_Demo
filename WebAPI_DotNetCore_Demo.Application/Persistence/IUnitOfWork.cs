@@ -16,5 +16,6 @@ namespace WebAPI_DotNetCore_Demo.Application.Persistence
         IUserRepository UserRepository { get; }
 
         Task<int> CompleteAsync(CancellationToken cancellationToken = default);
+        Task<int> CompleteWithAuditAsync(CancellationToken cancellationToken = default);
     }
 }

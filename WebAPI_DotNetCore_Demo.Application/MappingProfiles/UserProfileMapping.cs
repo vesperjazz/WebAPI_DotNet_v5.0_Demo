@@ -14,6 +14,8 @@ namespace WebAPI_DotNetCore_Demo.Application.MappingProfiles
 
         protected override void MapDataTransferObjectToDomain()
         {
+            CreateMap<CreateUserDto, User>()
+                .ForMember(dest => dest.UserRoles, opt => opt.MapFrom(src => src.RoleIDs.Select(rid => new UserRole { RoleID = rid })));
         }
     }
 }

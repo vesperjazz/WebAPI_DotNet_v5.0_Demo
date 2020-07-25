@@ -15,5 +15,6 @@ namespace WebAPI_DotNetCore_Demo.Application.Services.Interfaces
         Task<UserDto> GetUserByUserNameAsync(string userName, CancellationToken cancellationToken = default);
         Task<IEnumerable<UserDto>> GetAllUsersAsync(CancellationToken cancellationToken = default);
         void SetUserInactive(Guid userID);
+        Task CreateUserAsync(CreateUserDto createUserDto, CancellationToken cancellationToken = default);
     }
 }

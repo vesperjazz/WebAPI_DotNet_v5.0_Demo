@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System;
@@ -62,6 +61,15 @@ namespace WebAPI_DotNetCore_Demo.Controllers
         {
             _userService.SetUserInactive(userID);
             await _unitOfWork.CompleteAsync(cancellationToken);
+
+            return NoContent();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserDto createUserDto, CancellationToken cancellationToken)
+        {
+            await _userService.CreateUserAsync(createUserDto, cancellationToken);
+            await _unitOfWork.CompleteWithAuditAsync(cancellationToken);
 
             return NoContent();
         }

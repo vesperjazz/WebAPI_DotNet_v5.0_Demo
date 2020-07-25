@@ -1,7 +1,6 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +10,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System.Reflection;
-using System.Reflection.Metadata;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -57,6 +55,9 @@ namespace WebAPI_DotNetCore_Demo
 
             // Similarly, the UnitOfWork is a wrapper for DbContext, so it should be scoped as well.
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            // For auditing purposes in UnitOfWork.
+            services.AddHttpContextAccessor();
 
             // Install-Package AutoMapper.Extensions.Microsoft.DependencyInjection
             // 1. Mapping defines the depth of serialisation, gets rid of the reference loop error above.
