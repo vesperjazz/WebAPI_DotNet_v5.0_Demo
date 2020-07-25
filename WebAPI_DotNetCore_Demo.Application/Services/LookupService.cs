@@ -13,16 +13,16 @@ namespace WebAPI_DotNetCore_Demo.Application.Services
     public class LookupService : ILookupService
     {
         private readonly IMapper _mapper;
-        private readonly IUnitOfWork _unitOfWork;
-        public LookupService(IMapper mapper, IUnitOfWork unitOfWork)
+        private readonly IRepositoryContainer _repositoryContainer;
+        public LookupService(IMapper mapper, IRepositoryContainer repositoryContainer)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _repositoryContainer = repositoryContainer ?? throw new ArgumentNullException(nameof(repositoryContainer));
         }
 
         public async Task<GenderDto> GetGenderByIDAsync(Guid genderID, CancellationToken cancellationToken = default)
         {
-            var gender = await _unitOfWork.GenderRepository.GetAsync(genderID, cancellationToken);
+            var gender = await _repositoryContainer.GenderRepository.GetAsync(genderID, cancellationToken);
 
             if (gender is null) { throw new NotFoundException($"Gender with ID: [{genderID}] is not found."); }
 
@@ -32,12 +32,12 @@ namespace WebAPI_DotNetCore_Demo.Application.Services
         public async Task<IEnumerable<GenderDto>> GetAllGendersAsync(CancellationToken cancellationToken = default)
         {
             return _mapper.Map<IEnumerable<GenderDto>>(
-                await _unitOfWork.GenderRepository.GetAllAsync(cancellationToken));
+                await _repositoryContainer.GenderRepository.GetAllAsync(cancellationToken));
         }
 
         public async Task<CountryDto> GetCountryByIDAsync(Guid countryID, CancellationToken cancellationToken = default)
         {
-            var country = await _unitOfWork.CountryRepository.GetAsync(countryID, cancellationToken);
+            var country = await _repositoryContainer.CountryRepository.GetAsync(countryID, cancellationToken);
 
             if(country is null) { throw new NotFoundException($"Country with ID: [{countryID}] is not found."); }
 
@@ -47,12 +47,12 @@ namespace WebAPI_DotNetCore_Demo.Application.Services
         public async Task<IEnumerable<CountryDto>> GetAllCountriesAsync(CancellationToken cancellationToken = default)
         {
             return _mapper.Map<IEnumerable<CountryDto>>(
-                await _unitOfWork.CountryRepository.GetAllAsync(cancellationToken));
+                await _repositoryContainer.CountryRepository.GetAllAsync(cancellationToken));
         }
 
         public async Task<RoleDto> GetRoleByIDAsync(Guid roleID, CancellationToken cancellationToken = default)
         {
-            var role = await _unitOfWork.RoleRepository.GetAsync(roleID, cancellationToken);
+            var role = await _repositoryContainer.RoleRepository.GetAsync(roleID, cancellationToken);
 
             if(role is null) { throw new NotFoundException($"Role with ID: [{roleID}] is not found."); }
 
@@ -62,7 +62,7 @@ namespace WebAPI_DotNetCore_Demo.Application.Services
         public async Task<IEnumerable<RoleDto>> GetAllRolesAsync(CancellationToken cancellationToken = default)
         {
             return _mapper.Map<IEnumerable<RoleDto>>(
-                await _unitOfWork.RoleRepository.GetAllAsync(cancellationToken));
+                await _repositoryContainer.RoleRepository.GetAllAsync(cancellationToken));
         }
     }
 }

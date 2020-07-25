@@ -55,6 +55,7 @@ namespace WebAPI_DotNetCore_Demo
 
             // Similarly, the UnitOfWork is a wrapper for DbContext, so it should be scoped as well.
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IRepositoryContainer>(x => x.GetService<IUnitOfWork>());
 
             // For auditing purposes in UnitOfWork.
             services.AddHttpContextAccessor();
