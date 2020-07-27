@@ -24,17 +24,17 @@ namespace WebAPI_DotNetCore_Demo.Persistence.Migrations
                 columns: table => new
                 {
                     ID = table.Column<Guid>(nullable: false),
-                    CreateDate = table.Column<DateTime>(nullable: false),
-                    CreateByUserID = table.Column<Guid>(nullable: false),
-                    UpdateDate = table.Column<DateTime>(nullable: false),
-                    UpdateByUserID = table.Column<Guid>(nullable: false),
                     UserName = table.Column<string>(maxLength: 100, nullable: false),
                     FirstName = table.Column<string>(maxLength: 100, nullable: false),
                     LastName = table.Column<string>(maxLength: 100, nullable: false),
                     PasswordHash = table.Column<byte[]>(maxLength: 64, nullable: false),
                     PasswordSalt = table.Column<byte[]>(maxLength: 128, nullable: false),
                     ImageUrl = table.Column<string>(nullable: true),
-                    IsActive = table.Column<bool>(nullable: false)
+                    IsActive = table.Column<bool>(nullable: false),
+                    CreateDate = table.Column<DateTime>(nullable: false),
+                    CreateByUserID = table.Column<Guid>(nullable: false),
+                    UpdateDate = table.Column<DateTime>(nullable: false),
+                    UpdateByUserID = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
