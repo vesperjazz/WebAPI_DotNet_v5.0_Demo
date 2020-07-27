@@ -11,7 +11,8 @@ namespace WebAPI_DotNetCore_Demo.Persistence.Configurations
         {
             builder.ToTable(nameof(User));
 
-            builder.HasAlternateKey(u => u.UserName);
+            builder.HasIndex(u => u.UserName)
+                .IsUnique();
 
             builder.Property(u => u.UserName)
                 .HasMaxLength(100)

@@ -15,7 +15,7 @@ using WebAPI_DotNetCore_Demo.Persistence.Repositories;
 
 namespace WebAPI_DotNetCore_Demo.Persistence
 {
-    public class UnitOfWork : IUnitOfWork, IRepositoryContainer
+    public class UnitOfWork : IUnitOfWork
     {
         private readonly ISystemClock _systemClock;
         private readonly WebAPIDemoDbContext _context;

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using WebAPI_DotNetCore_Demo.Application.DataTransferObjects.Users;
 using WebAPI_DotNetCore_Demo.Application.Persistence;
 using WebAPI_DotNetCore_Demo.Application.Services.Interfaces;
+using WebAPI_DotNetCore_Demo.Authorizations;
 using WebAPI_DotNetCore_Demo.Options;
 
 namespace WebAPI_DotNetCore_Demo.Controllers
@@ -57,6 +58,7 @@ namespace WebAPI_DotNetCore_Demo.Controllers
         }
 
         [HttpDelete("{userID}")]
+        [Authorize(Policy = Policy.AdminOnly)]
         public async Task<IActionResult> DeleteUserAsync(Guid userID, CancellationToken cancellationToken)
         {
             _userService.SetUserInactive(userID);
@@ -66,6 +68,7 @@ namespace WebAPI_DotNetCore_Demo.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = Policy.AdminOnly)]
         public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserDto createUserDto, CancellationToken cancellationToken)
         {
             await _userService.CreateUserAsync(createUserDto, cancellationToken);

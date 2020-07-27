@@ -1,6 +1,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +18,9 @@ using WebAPI_DotNetCore_Demo.Application.MappingProfiles;
 using WebAPI_DotNetCore_Demo.Application.Persistence;
 using WebAPI_DotNetCore_Demo.Application.Services;
 using WebAPI_DotNetCore_Demo.Application.Services.Interfaces;
+using WebAPI_DotNetCore_Demo.Authorizations;
+using WebAPI_DotNetCore_Demo.Domain.Constants;
+using WebAPI_DotNetCore_Demo.Extensions;
 using WebAPI_DotNetCore_Demo.Middlewares;
 using WebAPI_DotNetCore_Demo.Options;
 using WebAPI_DotNetCore_Demo.Persistence;
@@ -106,6 +110,18 @@ namespace WebAPI_DotNetCore_Demo
                         }
                     };
                 });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(Policy.AdminOnly, authorizationPolicyBuilder =>
+                {
+                    authorizationPolicyBuilder.RequireRoleAuthorization(RoleConstants.Admin);
+                });
+            });
+
+            // The beauty of using a custom IAuthorizationHandler is the access to dependency injection,
+            // i.e. availability of data from the Database for more dynamic authorization requirements.
+            services.AddScoped<IAuthorizationHandler, WebAPIDemoAuthorizationHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
