@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace WebAPI_DotNetCore_Demo.Application.DataTransferObjects
+﻿namespace WebAPI_DotNetCore_Demo.Application.DataTransferObjects.Persons
 {
-    public class CreateAddressDto
+    public sealed class AddressDto
     {
         public string AddressType { get; set; }
         public string FirstLine { get; set; }
@@ -11,6 +9,7 @@ namespace WebAPI_DotNetCore_Demo.Application.DataTransferObjects
         public string PostCode { get; set; }
         public string City { get; set; }
         public string State { get; set; }
-        public Guid? CountryID { get; set; }
+        public string CountryName { get; set; }
+        public string CountryISOCode { get; set; }
     }
 }

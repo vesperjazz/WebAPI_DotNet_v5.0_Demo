@@ -1,10 +1,10 @@
 using AutoMapper;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,8 +13,6 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using NSwag;
 using NSwag.Generation.Processors.Security;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
@@ -23,6 +21,7 @@ using WebAPI_DotNetCore_Demo.Application.MappingProfiles;
 using WebAPI_DotNetCore_Demo.Application.Persistence;
 using WebAPI_DotNetCore_Demo.Application.Services;
 using WebAPI_DotNetCore_Demo.Application.Services.Interfaces;
+using WebAPI_DotNetCore_Demo.Application.Validators;
 using WebAPI_DotNetCore_Demo.Authorizations;
 using WebAPI_DotNetCore_Demo.Domain.Constants;
 using WebAPI_DotNetCore_Demo.Extensions;
@@ -51,11 +50,19 @@ namespace WebAPI_DotNetCore_Demo
         {
             services.Configure<JwtSettings>(Configuration.GetSection(JwtSettingsSection));
 
-            // To fix the following JsonException -> Install-Package Microsoft.AspNetCore.Mvc.NewtonsoftJson
+            // To fix the following JsonException:
             // JsonException: A possible object cycle was detected which is not supported. 
             // This can either be due to a cycle or if the object depth is larger than the maximum allowed depth of 32.
-            services.AddControllers().AddNewtonsoftJson(options =>
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
+            services.AddControllers()
+                // Install-Package Microsoft.AspNetCore.Mvc.NewtonsoftJson
+                .AddNewtonsoftJson(options =>
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore)
+                // Install-Package FluentValidation.AspNetCore
+                .AddFluentValidation(configuration => 
+                {
+                    configuration.ImplicitlyValidateChildProperties = true;
+                    configuration.RegisterValidatorsFromAssembly(Assembly.GetAssembly(typeof(ValidatorBase<>)));
+                });
 
             // ServiceLifetime of DbContext is scoped by default, specifying to make the intentions clearer.
             // DbContext needs to be scoped as we want the container to return the same instance of DbContext

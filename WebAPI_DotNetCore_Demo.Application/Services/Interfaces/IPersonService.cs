@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using WebAPI_DotNetCore_Demo.Application.DataTransferObjects;
+using WebAPI_DotNetCore_Demo.Application.DataTransferObjects.Persons;
 
 namespace WebAPI_DotNetCore_Demo.Application.Services.Interfaces
 {

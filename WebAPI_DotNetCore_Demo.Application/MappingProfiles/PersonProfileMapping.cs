@@ -1,4 +1,4 @@
-﻿using WebAPI_DotNetCore_Demo.Application.DataTransferObjects;
+﻿using WebAPI_DotNetCore_Demo.Application.DataTransferObjects.Persons;
 using WebAPI_DotNetCore_Demo.Domain.Entities;
 
 namespace WebAPI_DotNetCore_Demo.Application.MappingProfiles

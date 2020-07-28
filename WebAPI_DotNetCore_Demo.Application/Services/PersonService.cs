@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using WebAPI_DotNetCore_Demo.Application.DataTransferObjects;
+using WebAPI_DotNetCore_Demo.Application.DataTransferObjects.Persons;
 using WebAPI_DotNetCore_Demo.Application.Exceptions;
 using WebAPI_DotNetCore_Demo.Application.Persistence;
 using WebAPI_DotNetCore_Demo.Application.Services.Interfaces;

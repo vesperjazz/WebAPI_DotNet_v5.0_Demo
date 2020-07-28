@@ -1,4 +1,4 @@
-﻿namespace WebAPI_DotNetCore_Demo.Application.DataTransferObjects
+﻿namespace WebAPI_DotNetCore_Demo.Application.DataTransferObjects.Persons
 {
     public sealed class PhoneNumberDto
     {
