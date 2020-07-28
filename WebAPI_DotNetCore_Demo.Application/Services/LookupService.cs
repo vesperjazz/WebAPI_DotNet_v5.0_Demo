@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using WebAPI_DotNetCore_Demo.Application.DataTransferObjects.Lookups;
@@ -47,7 +48,8 @@ namespace WebAPI_DotNetCore_Demo.Application.Services
         public async Task<IEnumerable<CountryDto>> GetAllCountriesAsync(CancellationToken cancellationToken = default)
         {
             return _mapper.Map<IEnumerable<CountryDto>>(
-                await _repositoryContainer.CountryRepository.GetAllAsync(cancellationToken));
+                await _repositoryContainer.CountryRepository.GetAllAsync(cancellationToken))
+                .OrderBy(c => c.SortOrder);
         }
 
         public async Task<RoleDto> GetRoleByIDAsync(Guid roleID, CancellationToken cancellationToken = default)

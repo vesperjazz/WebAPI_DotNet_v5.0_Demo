@@ -4,12 +4,17 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using NSwag;
+using NSwag.Generation.Processors.Security;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
@@ -32,6 +37,8 @@ namespace WebAPI_DotNetCore_Demo
         private const string AccessToken = "AccessToken";
         private const string JwtSettingsSection = "JwtSettings";
         private const string ConnectionStringSection = "WebAPIDemoDatabase";
+        private const string SwaggerUISecurityName = "SwaggerUIJwt";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -121,7 +128,25 @@ namespace WebAPI_DotNetCore_Demo
 
             // The beauty of using a custom IAuthorizationHandler is the access to dependency injection,
             // i.e. availability of data from the Database for more dynamic authorization requirements.
+            // It is very important for the AuthorizationHandler to be scoped, as its dependency of
+            // IRepositoryContainer is a scoped service as well.
             services.AddScoped<IAuthorizationHandler, WebAPIDemoAuthorizationHandler>();
+
+            // @TODO Add custom WebAPI ProducesResponseType attribute for more accurate response types.
+            // Currently only HttpStatusCode of 200 is available.
+            services.AddSwaggerDocument(settings =>
+            {
+                settings.Title = "ASP.NET v3.1 WebAPI Demo";
+                settings.Description = "SwaggerUI WebAPI Demo";
+                settings.AddSecurity(SwaggerUISecurityName, new OpenApiSecurityScheme
+                {
+                    Type = OpenApiSecuritySchemeType.ApiKey,
+                    In = OpenApiSecurityApiKeyLocation.Header,
+                    Name = "Authorization", // Key for Jwt header, cannot be any other value.
+                    Description = "Type into the textbox: Bearer {your JWT token}."
+                });
+                settings.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor(SwaggerUISecurityName));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -137,8 +162,10 @@ namespace WebAPI_DotNetCore_Demo
             app.UseRouting();
 
             app.UseAuthentication();
-
             app.UseAuthorization();
+
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
 
             app.UseEndpoints(endpoints =>
             {
