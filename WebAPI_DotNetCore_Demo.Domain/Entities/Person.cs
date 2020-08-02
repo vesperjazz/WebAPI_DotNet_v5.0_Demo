@@ -15,6 +15,6 @@ namespace WebAPI_DotNetCore_Demo.Domain.Entities
         public Gender Gender { get; set; }
 
         public ICollection<PhoneNumber> PhoneNumbers { get; set; }
-        public ICollection<Address> Addresses { get; set; }        
+        public ICollection<Address> Addresses { get; set; }
     }
 }

@@ -92,8 +92,9 @@ namespace WebAPI_DotNetCore_Demo
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IJwtTokenService, JwtTokenService>();
             services.AddTransient<IPasswordService, PasswordService>();
-            services.AddTransient<ISystemClock, SystemClock>();
             services.AddTransient<HMAC, HMACSHA512>();
+
+            services.AddSingleton<ISystemClock, SystemClock>();
 
             // Install-Package Microsoft.AspNetCore.Authentication.JwtBearer
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

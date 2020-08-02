@@ -6,22 +6,22 @@ using System.Threading.Tasks;
 
 namespace WebAPI_DotNetCore_Demo.Application.Exceptions
 {
-    public class IncorrectPasswordException : Exception, IException
+    public class DuplicateException : Exception, IException
     {
-        public IncorrectPasswordException() { }
+        public DuplicateException() { }
 
-        public IncorrectPasswordException(string message) : base(message) { }
+        public DuplicateException(string message) : base(message) { }
 
-        public IncorrectPasswordException(string message, Exception inner) : base(message, inner) { }
+        public DuplicateException(string message, Exception inner) : base(message, inner) { }
 
         public async Task TransformHttpResponseAsync(HttpContext httpContext)
         {
-            httpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+            httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
             await httpContext.Response.WriteAsync(
                 JsonConvert.SerializeObject(new
                 {
-                    HttpStatusCode = HttpStatusCode.Unauthorized,
+                    HttpStatusCode = HttpStatusCode.BadRequest,
                     ErrorMessage = Message
                 }));
         }

@@ -43,18 +43,16 @@ namespace WebAPI_DotNetCore_Demo.Application.Services
 
             if (!isPasswordCorrect) { throw new IncorrectPasswordException($"User with UserName: [{loginUserDto.UserName}] does not have Password: [{loginUserDto.Password}]"); }
 
-            var expirationDate = _systemClock.UtcNow.AddMilliseconds(expiryInMilliseconds);
+            var expirationDate = _systemClock.UtcNow.AddMilliseconds(expiryInMilliseconds).LocalDateTime;
 
             var accessToken = _jwtTokenService.GetAccessToken(user.ID.Value, user.UserName,
                 user.UserRoles.Select(ur => ur.Role.Name), issuer, audience, secretKey, expirationDate);
 
-            var authenticateUserDto = new AuthenticatedUserDto
+            return new AuthenticatedUserDto
             {
-                TokenExpiration = expirationDate.UtcDateTime,
+                TokenExpiration = expirationDate,
                 AccessToken = accessToken
             };
-
-            return authenticateUserDto;
         }
 
         public async Task<UserDto> GetUserByIDAsync(Guid userID, CancellationToken cancellationToken = default)
@@ -92,6 +90,10 @@ namespace WebAPI_DotNetCore_Demo.Application.Services
 
         public async Task CreateUserAsync(CreateUserDto createUserDto, CancellationToken cancellationToken = default)
         {
+            var isUserExist = await _repositoryContainer.UserRepository.AnyAsync(u => u.UserName == createUserDto.UserName, cancellationToken);
+
+            if (isUserExist) { throw new DuplicateException($"User with username: [{createUserDto.UserName}] already exists."); }
+
             var newUser = _mapper.Map<User>(createUserDto);
             var (salt, hash) = _passwordService.CreatePasswordHash(createUserDto.Password);
 

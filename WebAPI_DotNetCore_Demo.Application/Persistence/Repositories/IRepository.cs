@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using WebAPI_DotNetCore_Demo.Domain.Entities.Bases;
@@ -21,5 +20,6 @@ namespace WebAPI_DotNetCore_Demo.Application.Persistence.Repositories
         Task<IEnumerable<TEntity>> GetByAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
         
         void Update(TEntity entity);
+        Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
     }
 }

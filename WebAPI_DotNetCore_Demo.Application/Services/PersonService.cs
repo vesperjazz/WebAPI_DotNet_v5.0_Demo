@@ -55,7 +55,6 @@ namespace WebAPI_DotNetCore_Demo.Application.Services
             _repositoryContainer.PersonRepository.UpdatePersonName(updatedPerson);
         }
 
-
         public async Task DeletePersonByIDAsync(Guid personID, CancellationToken cancellationToken = default)
         {
             try

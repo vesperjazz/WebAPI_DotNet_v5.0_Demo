@@ -12,8 +12,10 @@ namespace WebAPI_DotNetCore_Demo.Application.Services
     public class JwtTokenService : IJwtTokenService
     {
         public string GetAccessToken(Guid UserID, string userName, IEnumerable<string> roles,
-            string issuer, string audience, string secretKey, DateTimeOffset expirationDate)
+            string issuer, string audience, string secretKey, DateTime expirationDate)
         {
+            // @TODO Add validation of parameters, e.g expirationDate must be larger than current date time.
+
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, UserID.ToString()),
@@ -29,7 +31,7 @@ namespace WebAPI_DotNetCore_Demo.Application.Services
                 issuer: issuer,
                 audience: audience,
                 claims: claims,
-                expires: expirationDate.UtcDateTime,
+                expires: expirationDate,
                 signingCredentials: signingCredentials);
 
             var jwt = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);

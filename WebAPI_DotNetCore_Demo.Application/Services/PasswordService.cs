@@ -18,7 +18,7 @@ namespace WebAPI_DotNetCore_Demo.Application.Services
 
         public (byte[] Salt, byte[] Hash) CreatePasswordHash(string password)
         {
-            if (string.IsNullOrEmpty(password))
+            if (string.IsNullOrWhiteSpace(password))
             {
                 throw new ArgumentException("Password cannot be null, empty or white space.");
             }

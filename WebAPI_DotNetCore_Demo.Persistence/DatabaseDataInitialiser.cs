@@ -16,26 +16,47 @@ namespace WebAPI_DotNetCore_Demo.Persistence
         {
             if (context.Users.Any()) { return; }
 
-            var userID = new Guid("9338B511-C135-41A9-9ACE-48211DB19BE9");
+            var primaryUserID = new Guid("9338B511-C135-41A9-9ACE-48211DB19BE9");
             var currentDateTime = DateTime.Now;
-            var (Salt, Hash) = CreatePasswordHash("jrrtolkien");
+            var (primarySalt, primaryHash) = CreatePasswordHash("jrrtolkien");
 
             context.Users.Add(new User
             {
-                ID = userID,
+                ID = primaryUserID,
                 UserName = "aragorn.elessar",
                 FirstName = "Aragorn",
                 LastName = "Elessar",
-                PasswordHash = Hash,
-                PasswordSalt = Salt,
+                PasswordHash = primaryHash,
+                PasswordSalt = primarySalt,
                 UserRoles = new List<UserRole>
                 {
                     new UserRole { RoleID = new Guid("dab0807c-822c-4258-ad79-07dd543cb253") }
                 },
                 CreateDate = currentDateTime,
                 UpdateDate = currentDateTime,
-                CreateByUserID = userID,
-                UpdateByUserID = userID
+                CreateByUserID = primaryUserID,
+                UpdateByUserID = primaryUserID
+            });
+
+            var secondaryUserID = new Guid("30B801CC-216B-4F1B-6243-08D8312EBC95");
+            var (secondarySalt, secondaryHash) = CreatePasswordHash("eruilluvatar");
+
+            context.Users.Add(new User
+            {
+                ID = secondaryUserID,
+                UserName = "arwen.undomiel",
+                FirstName = "Arwen",
+                LastName = "Undomiel",
+                PasswordHash = secondaryHash,
+                PasswordSalt = secondarySalt,
+                UserRoles = new List<UserRole>
+                {
+                    new UserRole { RoleID = new Guid("99626019-0a7d-4c79-9058-b727ed7b1fa9") }
+                },
+                CreateDate = currentDateTime,
+                UpdateDate = currentDateTime,
+                CreateByUserID = primaryUserID,
+                UpdateByUserID = primaryUserID
             });
 
             context.SaveChanges();

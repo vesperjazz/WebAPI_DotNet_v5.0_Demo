@@ -83,30 +83,10 @@ namespace WebAPI_DotNetCore_Demo.Middlewares
         {
             httpContext.Response.ContentType = "application/json";
 
-            // More custom exceptions to be handled in the future.
-            // @TODO Add an injectable service to handle different types of 
-            // exceptions and their different HttpStatusCode.
-            if (exception is NotFoundException)
+            // Open/Closed principle baby!
+            if (exception is IException customException)
             {
-                httpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
-
-                await httpContext.Response.WriteAsync(
-                    JsonConvert.SerializeObject(new
-                    {
-                        HttpStatusCode = HttpStatusCode.NotFound,
-                        ErrorMessage = exception.Message
-                    }));
-            }
-            else if (exception is IncorrectPasswordException)
-            {
-                httpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-
-                await httpContext.Response.WriteAsync(
-                    JsonConvert.SerializeObject(new
-                    {
-                        HttpStatusCode = HttpStatusCode.Unauthorized,
-                        ErrorMessage = exception.Message
-                    }));
+                await customException.TransformHttpResponseAsync(httpContext);
             }
             else
             {

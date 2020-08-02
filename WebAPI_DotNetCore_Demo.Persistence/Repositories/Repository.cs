@@ -68,5 +68,10 @@ namespace WebAPI_DotNetCore_Demo.Persistence.Repositories
             // correct dependent entities ID.
             _entities.Update(entity);
         }
+
+        public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+        {
+            return await _entities.AnyAsync(predicate, cancellationToken);
+        }
     }
 }
