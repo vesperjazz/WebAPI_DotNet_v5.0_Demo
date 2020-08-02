@@ -52,7 +52,7 @@ namespace WebAPI_DotNetCore_Demo.Persistence
         {
             _context.ChangeTracker.DetectChanges();
 
-            var currentDateTime = _systemClock.UtcNow.UtcDateTime;
+            var currentDateTime = _systemClock.UtcNow.LocalDateTime;
             var currentUserID = new Guid(_httpContextAccessor.HttpContext.User
                 .FindFirst(ClaimTypes.NameIdentifier).Value);
 

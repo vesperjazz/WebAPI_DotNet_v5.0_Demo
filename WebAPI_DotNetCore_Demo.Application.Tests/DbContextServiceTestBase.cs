@@ -31,6 +31,7 @@ namespace WebAPI_DotNetCore_Demo.Application.Tests
             // InMemory database will be used across the tests, this behaviour is undesirable.
             _databaseName = Guid.NewGuid().ToString();
             var dbContextOptions = new DbContextOptionsBuilder<WebAPIDemoDbContext>()
+                // Install-Package Microsoft.EntityFrameworkCore.InMemory
                 .UseInMemoryDatabase(databaseName: _databaseName)
                 .Options;
             _context = new WebAPIDemoDbContext(dbContextOptions);
