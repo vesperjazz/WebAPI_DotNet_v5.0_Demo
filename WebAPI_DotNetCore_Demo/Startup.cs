@@ -17,6 +17,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using WebAPI_DotNetCore_Demo.Application.Infrastructure;
 using WebAPI_DotNetCore_Demo.Application.MappingProfiles;
 using WebAPI_DotNetCore_Demo.Application.Persistence;
 using WebAPI_DotNetCore_Demo.Application.Services;
@@ -25,6 +26,8 @@ using WebAPI_DotNetCore_Demo.Application.Validators;
 using WebAPI_DotNetCore_Demo.Authorizations;
 using WebAPI_DotNetCore_Demo.Domain.Constants;
 using WebAPI_DotNetCore_Demo.Extensions;
+using WebAPI_DotNetCore_Demo.Infrastructure;
+using WebAPI_DotNetCore_Demo.Infrastructure.Options;
 using WebAPI_DotNetCore_Demo.Middlewares;
 using WebAPI_DotNetCore_Demo.Options;
 using WebAPI_DotNetCore_Demo.Persistence;
@@ -35,6 +38,7 @@ namespace WebAPI_DotNetCore_Demo
     {
         private const string AccessToken = "AccessToken";
         private const string JwtSettingsSection = "JwtSettings";
+        private const string SmtpSettingsSection = "SmtpSettings";
         private const string ConnectionStringSection = "WebAPIDemoDatabase";
         private const string SwaggerUISecurityName = "SwaggerUIJwt";
 
@@ -49,6 +53,7 @@ namespace WebAPI_DotNetCore_Demo
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<JwtSettings>(Configuration.GetSection(JwtSettingsSection));
+            services.Configure<SmtpSettings>(Configuration.GetSection(SmtpSettingsSection));
 
             // To fix the following JsonException:
             // JsonException: A possible object cycle was detected which is not supported. 
@@ -93,6 +98,7 @@ namespace WebAPI_DotNetCore_Demo
             services.AddTransient<IJwtTokenService, JwtTokenService>();
             services.AddTransient<IPasswordService, PasswordService>();
             services.AddTransient<HMAC, HMACSHA512>();
+            services.AddTransient<IEmailService, MailKitEmailService>();
 
             services.AddSingleton<ISystemClock, SystemClock>();
 

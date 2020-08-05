@@ -131,6 +131,7 @@ namespace WebAPI_DotNetCore_Demo.Persistence.Tests
             // Act
             await _unitOfWorkSUT.CompleteWithAuditAsync();
 
+            // Assert
             var updatedDomainUser = await _context.Users
                 .SingleOrDefaultAsync(u => u.ID == existingUserID);
 

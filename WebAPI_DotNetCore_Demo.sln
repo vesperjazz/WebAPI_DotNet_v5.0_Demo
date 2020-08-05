@@ -31,6 +31,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI_DotNetCore_Demo.Appl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI_DotNetCore_Demo.Persistence.Tests", "WebAPI_DotNetCore_Demo.Persistence.Tests\WebAPI_DotNetCore_Demo.Persistence.Tests.csproj", "{4EEBF591-A51B-4B15-9305-6D2591988CD4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI_DotNetCore_Demo.Infrastructure.Tests", "WebAPI_DotNetCore_Demo.Infrastructure.Tests\WebAPI_DotNetCore_Demo.Infrastructure.Tests.csproj", "{ED82FAFA-0225-4BF5-85C7-C539E59F08B2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,10 @@ Global
 		{4EEBF591-A51B-4B15-9305-6D2591988CD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4EEBF591-A51B-4B15-9305-6D2591988CD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4EEBF591-A51B-4B15-9305-6D2591988CD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED82FAFA-0225-4BF5-85C7-C539E59F08B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED82FAFA-0225-4BF5-85C7-C539E59F08B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED82FAFA-0225-4BF5-85C7-C539E59F08B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED82FAFA-0225-4BF5-85C7-C539E59F08B2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -86,6 +92,7 @@ Global
 		{3C2CF5FB-BE24-48C4-BB81-633ABC644455} = {A6CBB86D-C93C-49C0-A0A5-50A3BB31E813}
 		{3BA8B18B-85CD-4E19-958E-E253BF6D5EC3} = {7D5141B8-9E4D-407C-B049-09BACE1678C5}
 		{4EEBF591-A51B-4B15-9305-6D2591988CD4} = {7D5141B8-9E4D-407C-B049-09BACE1678C5}
+		{ED82FAFA-0225-4BF5-85C7-C539E59F08B2} = {7D5141B8-9E4D-407C-B049-09BACE1678C5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8982F9C3-4621-44A2-BA26-A160B6921342}
