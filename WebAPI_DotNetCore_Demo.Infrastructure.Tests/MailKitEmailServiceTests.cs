@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using WebAPI_DotNetCore_Demo.Application.Exceptions;
 using WebAPI_DotNetCore_Demo.Infrastructure.Options;
@@ -14,7 +14,7 @@ namespace WebAPI_DotNetCore_Demo.Infrastructure.Tests
     {
         private SmtpSettings _smtpSettings;
         private readonly Mock<IOptionsSnapshot<SmtpSettings>> _mockSmtpSettings;
-
+        private readonly Mock<ILogger<MailKitEmailService>> _mockLogger;
         private readonly MailKitEmailService _mailKitEmailServiceSUT;
 
         public MailKitEmailServiceTests()
@@ -22,7 +22,9 @@ namespace WebAPI_DotNetCore_Demo.Infrastructure.Tests
             _smtpSettings = new SmtpSettings();
             _mockSmtpSettings = new Mock<IOptionsSnapshot<SmtpSettings>>();
             _mockSmtpSettings.Setup(x => x.Value).Returns(_smtpSettings);
-            _mailKitEmailServiceSUT = new MailKitEmailService(_mockSmtpSettings.Object);
+            _mockLogger = new Mock<ILogger<MailKitEmailService>>();
+            _mailKitEmailServiceSUT = new MailKitEmailService(
+                _mockSmtpSettings.Object, _mockLogger.Object);
         }
 
         public void Dispose()
@@ -34,12 +36,12 @@ namespace WebAPI_DotNetCore_Demo.Infrastructure.Tests
         [InlineData("wrong.live.com", 123, 1000)]
         [InlineData("wrongagain.gmail.com", 456, 1000)]
         [InlineData("damnson.office365.com", 789, 1000)]
-        public async Task ConnectAsync_InvalidHostAndPort_ThrowsSmtpConnectException(string host, int port, int timeout)
+        public async Task ConnectAsync_InvalidHostAndPort_ThrowsSmtpConnectException(string host, int port, int timeoutMs)
         {
             // Arrange
             _smtpSettings.Host = host;
             _smtpSettings.Port = port;
-            _smtpSettings.TimeoutMs = timeout;
+            _smtpSettings.TimeoutMs = timeoutMs;
 
             await Assert.ThrowsAsync<SmtpConnectException>(async () =>
             {
@@ -51,12 +53,12 @@ namespace WebAPI_DotNetCore_Demo.Infrastructure.Tests
         [InlineData("smtp.live.com", 587, 1000)]
         [InlineData("smtp.gmail.com", 587, 1000)]
         [InlineData("smtp.office365.com", 587, 1000)]
-        public async Task ConnectAsync_ValidHostAndPort_ReturnsSuccessfulConnection(string host, int port, int timeout)
+        public async Task ConnectAsync_ValidHostAndPort_ReturnsSuccessfulConnection(string host, int port, int timeoutMs)
         {
             // Arrange
             _smtpSettings.Host = host;
             _smtpSettings.Port = port;
-            _smtpSettings.TimeoutMs = timeout;
+            _smtpSettings.TimeoutMs = timeoutMs;
 
             // Act
             var isConnected = await _mailKitEmailServiceSUT.ConnectAsync();

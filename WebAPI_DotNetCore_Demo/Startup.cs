@@ -1,5 +1,7 @@
 using AutoMapper;
 using FluentValidation.AspNetCore;
+using Hangfire;
+using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -13,6 +15,8 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using NSwag;
 using NSwag.Generation.Processors.Security;
+using Serilog;
+using System;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
@@ -39,6 +43,7 @@ namespace WebAPI_DotNetCore_Demo
         private const string AccessToken = "AccessToken";
         private const string JwtSettingsSection = "JwtSettings";
         private const string SmtpSettingsSection = "SmtpSettings";
+        private const string HangfireSettingsSection = "HangfireSettings";
         private const string ConnectionStringSection = "WebAPIDemoDatabase";
         private const string SwaggerUISecurityName = "SwaggerUIJwt";
 
@@ -161,6 +166,32 @@ namespace WebAPI_DotNetCore_Demo
                 });
                 settings.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor(SwaggerUISecurityName));
             });
+
+            // Install-Package Hangfire.AspNetCore
+            services.AddHangfire(configuration => 
+            {
+                // The reason to use a separate settings class instead of SqlServerStorageOptions class directly
+                // is to prevent overriding the default values of unused configuration properties.
+                var hangfireSettings = Configuration.GetSection(HangfireSettingsSection).Get<HangfireSettings>();
+
+                configuration
+                    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                    .UseSimpleAssemblyNameTypeSerializer()
+                    .UseRecommendedSerializerSettings()
+                    // Install-Package Hangfire.SqlServer
+                    .UseSqlServerStorage(Configuration.GetConnectionString(ConnectionStringSection),
+                        new SqlServerStorageOptions
+                        {
+                            CommandBatchMaxTimeout = hangfireSettings.CommandBatchMaxTimeout,
+                            SlidingInvisibilityTimeout = hangfireSettings.SlidingInvisibilityTimeout,
+                            QueuePollInterval = hangfireSettings.QueuePollInterval,
+                            UseRecommendedIsolationLevel = hangfireSettings.UseRecommendedIsolationLevel,
+                            DisableGlobalLocks = hangfireSettings.DisableGlobalLocks
+                        });
+            });
+
+            // Add the processing server as IHostedService
+            services.AddHangfireServer();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -180,6 +211,9 @@ namespace WebAPI_DotNetCore_Demo
 
             app.UseOpenApi();
             app.UseSwaggerUi3();
+
+            app.UseHangfireDashboard();
+            app.UseHangfireServer();
 
             app.UseEndpoints(endpoints =>
             {

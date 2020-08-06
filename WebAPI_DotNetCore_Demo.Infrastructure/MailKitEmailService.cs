@@ -1,5 +1,6 @@
 ﻿using MailKit.Net.Smtp;
 using MailKit.Security;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using MimeKit.Text;
@@ -18,12 +19,14 @@ namespace WebAPI_DotNetCore_Demo.Infrastructure
     {
         private readonly SmtpClient _smtpClient;
         private readonly SmtpSettings _smtpSettings;
+        private readonly ILogger<MailKitEmailService> _logger;
 
-        public MailKitEmailService(IOptionsSnapshot<SmtpSettings> smtpSettings)
+        public MailKitEmailService(IOptionsSnapshot<SmtpSettings> smtpSettings, ILogger<MailKitEmailService> logger)
         {
             // Install-Package MailKit
             _smtpClient = new SmtpClient();
             _smtpSettings = smtpSettings?.Value ?? throw new ArgumentNullException(nameof(smtpSettings));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public void Dispose()
@@ -46,6 +49,7 @@ namespace WebAPI_DotNetCore_Demo.Infrastructure
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, ex.Message);
                 throw new SmtpConnectException(ex.Message, ex);
             }
 
@@ -77,8 +81,13 @@ namespace WebAPI_DotNetCore_Demo.Infrastructure
 
                 return true;
             }
+            catch(SmtpConnectException)
+            {
+                return false;
+            }
             catch (Exception ex)
             {
+                _logger.LogError(ex, ex.Message);
                 return false;
             }
         }

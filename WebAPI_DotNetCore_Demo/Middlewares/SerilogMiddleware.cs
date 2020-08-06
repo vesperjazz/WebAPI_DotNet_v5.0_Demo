@@ -110,8 +110,7 @@ namespace WebAPI_DotNetCore_Demo.Middlewares
                 .ForContext("ResponseStatusCode", httpContext.Response.StatusCode)
                 .ForContext("ResponseBody", _responseBody, true)
                 .ForContext("ElapsedMs", elapsedMs)
-                .ForContext("UserName", httpContext.User.Identity.Name)
-                .ForContext("Environment", environmentName);
+                .ForContext("UserName", httpContext.User.Identity.Name);
         }
 
         private static double GetElapsedMilliseconds(long start, long stop)

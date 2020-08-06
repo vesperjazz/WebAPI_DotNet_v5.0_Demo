@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using Serilog.Events;
 using Serilog.Sinks.MSSqlServer;
 using Serilog.Sinks.MSSqlServer.Sinks.MSSqlServer.Options;
 using System;
@@ -60,6 +61,8 @@ namespace WebAPI_DotNetCore_Demo
             // Install-Package Serilog.Enrichers.Thread
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(configuration)
+                // Too lazy to write a custom enricher and extension method, LOL.
+                .Enrich.WithProperty("Environment", Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"))
                 .CreateLogger();
         }
 
@@ -101,9 +104,11 @@ namespace WebAPI_DotNetCore_Demo
             Log.Logger = new LoggerConfiguration()
                 //.ReadFrom.Configuration(configuration) 
                 .MinimumLevel.Information()
-                .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning)
-                .MinimumLevel.Override("System", Serilog.Events.LogEventLevel.Warning)
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .MinimumLevel.Override("System", LogEventLevel.Warning)
+                .MinimumLevel.Override("Hangfire", LogEventLevel.Warning)
                 .Enrich.FromLogContext()
+                .Enrich.WithProperty("Environment", Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"))
                 .Enrich.WithMachineName() // Install-Package Serilog.Enrichers.Environment
                 .Enrich.WithProcessId()   // Install-Package Serilog.Enrichers.Process
                 .Enrich.WithThreadId()    // Install-Package Serilog.Enrichers.Thread
