@@ -17,6 +17,7 @@ using NSwag;
 using NSwag.Generation.Processors.Security;
 using Serilog;
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
@@ -44,6 +45,7 @@ namespace WebAPI_DotNetCore_Demo
         private const string JwtSettingsSection = "JwtSettings";
         private const string SmtpSettingsSection = "SmtpSettings";
         private const string HangfireSettingsSection = "HangfireSettings";
+        private const string WeatherApiSettingsSection = "WeatherApiSettings";
         private const string ConnectionStringSection = "WebAPIDemoDatabase";
         private const string SwaggerUISecurityName = "SwaggerUIJwt";
 
@@ -92,7 +94,10 @@ namespace WebAPI_DotNetCore_Demo
             // 1. Mapping defines the depth of serialisation, gets rid of the reference loop error above.
             // 2. Abstracts away the real database structure.
             // 3. Provides a more straight forward data transfer object required by each API.
-            services.AddAutoMapper(Assembly.GetAssembly(typeof(ProfileBase)));
+            // AutoMapper scans the assembly provided for classes that implements the Profile base
+            // class, in our case that would be ProfileBase as it inherits the actual Profile class
+            // by AutoMapper.
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             // @TODO To implement a registration by assembly, i.e. no need for manual registration each
             // time a new service is added under the same assembly.
@@ -192,6 +197,17 @@ namespace WebAPI_DotNetCore_Demo
 
             // Add the processing server as IHostedService
             services.AddHangfireServer();
+
+            // Typed client approach.
+            services.AddHttpClient<IWeatherService, WeatherService>(httpClient =>
+            {
+                var weatherApiSettings = Configuration
+                    .GetSection(WeatherApiSettingsSection)
+                    .Get<WeatherApiSettings>();
+
+                httpClient.Timeout = weatherApiSettings.Timeout;
+                httpClient.BaseAddress = new Uri(weatherApiSettings.BaseAddress);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

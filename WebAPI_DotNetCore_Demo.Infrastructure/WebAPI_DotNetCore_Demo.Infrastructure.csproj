@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="MailKit" Version="2.8.0" />
+    <PackageReference Include="System.Net.Http.Json" Version="3.2.1" />
   </ItemGroup>
 
   <ItemGroup>
