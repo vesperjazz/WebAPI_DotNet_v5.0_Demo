@@ -12,7 +12,7 @@ namespace WebAPI_DotNetCore_Demo.Infrastructure.Tests
 {
     public class MailKitEmailServiceTests : IDisposable
     {
-        private SmtpSettings _smtpSettings;
+        private readonly SmtpSettings _smtpSettings;
         private readonly Mock<IOptionsSnapshot<SmtpSettings>> _mockSmtpSettings;
         private readonly Mock<ILogger<MailKitEmailService>> _mockLogger;
         private readonly MailKitEmailService _mailKitEmailServiceSUT;

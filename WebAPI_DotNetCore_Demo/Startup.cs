@@ -158,6 +158,7 @@ namespace WebAPI_DotNetCore_Demo
 
             // @TODO Add custom WebAPI ProducesResponseType attribute for more accurate response types.
             // Currently only HttpStatusCode of 200 is available.
+            // Install-Package NSwag.AspNetCore
             services.AddSwaggerDocument(settings =>
             {
                 settings.Title = "ASP.NET v3.1 WebAPI Demo";

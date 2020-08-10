@@ -50,8 +50,9 @@ namespace WebAPI_DotNetCore_Demo.Middlewares
                 _responseBody = await GetBodyAsync(httpContext.Response);
                 _responseBody = string.IsNullOrWhiteSpace(_responseBody) ? null : _responseBody;
 
-                GetLoggerWithContext(httpContext, elapsedMs, env.EnvironmentName).Information(MessageTemplate,
-                    httpContext.Request.Method, GetPath(httpContext), httpContext.Response?.StatusCode, elapsedMs);
+                GetLoggerWithContext(httpContext, elapsedMs).Information(MessageTemplate,
+                    httpContext.Request.Method, GetPath(httpContext),
+                    httpContext.Response?.StatusCode, elapsedMs);
 
                 await responseBody.CopyToAsync(originalResponseBodyStream);
             }
@@ -64,8 +65,9 @@ namespace WebAPI_DotNetCore_Demo.Middlewares
                 _responseBody = await GetBodyAsync(httpContext.Response);
                 _responseBody = string.IsNullOrWhiteSpace(_responseBody) ? null : _responseBody;
 
-                GetLoggerWithContext(httpContext, elapsedMs, env.EnvironmentName).Error(ex, MessageTemplate,
-                    httpContext.Request.Method, GetPath(httpContext), httpContext.Response?.StatusCode, elapsedMs);
+                GetLoggerWithContext(httpContext, elapsedMs).Error(ex, MessageTemplate,
+                    httpContext.Request.Method, GetPath(httpContext),
+                    httpContext.Response?.StatusCode, elapsedMs);
 
                 await responseBody.CopyToAsync(originalResponseBodyStream);
 
@@ -101,7 +103,7 @@ namespace WebAPI_DotNetCore_Demo.Middlewares
             }
         }
 
-        private ILogger GetLoggerWithContext(HttpContext httpContext, double elapsedMs, string environmentName)
+        private ILogger GetLoggerWithContext(HttpContext httpContext, double elapsedMs)
         {
             return Log.ForContext<SerilogMiddleware>()
                 .ForContext("RequestMethod", httpContext.Request.Method)
