@@ -55,7 +55,7 @@ namespace WebAPI_DotNetCore_Demo.Controllers
         }
 
         [HttpPatch]
-        public async Task<IActionResult> UpdatePersonBirthdayAsync([FromBody] UpdatePersonNameDto updatePersonNameDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdatePersonNameAsync([FromBody] UpdatePersonNameDto updatePersonNameDto, CancellationToken cancellationToken)
         {
             _personService.UpdatePersonName(updatePersonNameDto);
             await _unitOfWork.CompleteWithAuditAsync(cancellationToken);

@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Internal;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using WebAPI_DotNetCore_Demo.Domain.Entities.Users;
 
 namespace WebAPI_DotNetCore_Demo.Persistence

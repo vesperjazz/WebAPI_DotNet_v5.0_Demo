@@ -50,36 +50,28 @@ namespace WebAPI_DotNetCore_Demo.Persistence
 
         public async Task<int> CompleteWithAuditAsync(CancellationToken cancellationToken = default)
         {
-            _context.ChangeTracker.DetectChanges();
-
             var currentDateTime = _systemClock.UtcNow.LocalDateTime;
             var currentUserID = new Guid(_httpContextAccessor.HttpContext.User
                 .FindFirst(ClaimTypes.NameIdentifier).Value);
+            var auditableEntries = _context.ChangeTracker.Entries<AuditEntityBase>()
+                .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
 
-            var addedEntityEntries = _context.ChangeTracker.Entries()
-                .Where(ee => ee.Entity is AuditEntityBase && ee.State == EntityState.Added);
-
-            foreach (var entityEntry in addedEntityEntries)
+            foreach (var entityEntry in auditableEntries)
             {
-                var entity = entityEntry.Entity as AuditEntityBase;
-
-                entity.CreateDate = currentDateTime;
-                entity.CreateByUserID = currentUserID;
-                entity.UpdateDate = currentDateTime;
-                entity.UpdateByUserID = currentUserID;
-            }
-
-            var modifiedEntityEntries = _context.ChangeTracker.Entries()
-                .Where(ee => ee.Entity is AuditEntityBase && ee.State == EntityState.Modified);
-
-            foreach (var entityEntry in modifiedEntityEntries)
-            {
-                var entity = entityEntry.Entity as AuditEntityBase;
-
-                entityEntry.Property("CreateDate").IsModified = false;
-                entityEntry.Property("CreateByUserID").IsModified = false;
-                entity.UpdateDate = currentDateTime;
-                entity.UpdateByUserID = currentUserID;
+                switch (entityEntry.State)
+                {
+                    case EntityState.Added:
+                        entityEntry.Entity.CreateDate = currentDateTime;
+                        entityEntry.Entity.CreateByUserID = currentUserID;
+                        break;
+                    case EntityState.Modified:
+                        // This is necessary for operations that include _context.Set<T>().Update().
+                        entityEntry.Property(e => e.CreateDate).IsModified = false;
+                        entityEntry.Property(e => e.CreateByUserID).IsModified = false;
+                        break;
+                }
+                entityEntry.Entity.UpdateDate = currentDateTime;
+                entityEntry.Entity.UpdateByUserID = currentUserID;
             }
 
             return await _context.SaveChangesAsync(cancellationToken);

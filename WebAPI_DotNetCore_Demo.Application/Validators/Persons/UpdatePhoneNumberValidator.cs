@@ -7,8 +7,6 @@ namespace WebAPI_DotNetCore_Demo.Application.Validators.Persons
     {
         public UpdatePhoneNumberValidator()
         {
-            RuleFor(pn => pn.ID)
-                .NotEmpty();
             RuleFor(pn => pn.PhoneNumberType)
                 .MaximumLength(20)
                 .When(pn => !string.IsNullOrWhiteSpace(pn.PhoneNumberType));

@@ -7,8 +7,6 @@ namespace WebAPI_DotNetCore_Demo.Application.Validators.Persons
     {
         public UpdateAddressValidator()
         {
-            RuleFor(a => a.ID)
-                .NotEmpty();
             RuleFor(a => a.AddressType)
                 .MaximumLength(20)
                 .When(a => !string.IsNullOrWhiteSpace(a.AddressType));

@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using WebAPI_DotNetCore_Demo.Application.DataTransferObjects.Lookups;
+﻿using WebAPI_DotNetCore_Demo.Application.DataTransferObjects.Lookups;
 using WebAPI_DotNetCore_Demo.Domain.Entities.Lookups;
 using WebAPI_DotNetCore_Demo.Domain.Entities.Users;
 
