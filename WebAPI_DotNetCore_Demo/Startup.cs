@@ -43,6 +43,7 @@ namespace WebAPI_DotNetCore_Demo
     {
         private const string AccessToken = "AccessToken";
         private const string JwtSettingsSection = "JwtSettings";
+        private const string SwaggerSettingsSection = "SwaggerSettings";
         private const string SmtpSettingsSection = "SmtpSettings";
         private const string HangfireSettingsSection = "HangfireSettings";
         private const string WeatherApiSettingsSection = "WeatherApiSettings";
@@ -161,8 +162,10 @@ namespace WebAPI_DotNetCore_Demo
             // Install-Package NSwag.AspNetCore
             services.AddSwaggerDocument(settings =>
             {
-                settings.Title = "ASP.NET v3.1 WebAPI Demo";
-                settings.Description = "SwaggerUI WebAPI Demo";
+                var swaggerSettings = Configuration.GetSection(SwaggerSettingsSection).Get<SwaggerSettings>();
+
+                settings.Title = swaggerSettings.Title;
+                settings.Description = swaggerSettings.Description;
                 settings.AddSecurity(SwaggerUISecurityName, new OpenApiSecurityScheme
                 {
                     Type = OpenApiSecuritySchemeType.ApiKey,
@@ -218,6 +221,12 @@ namespace WebAPI_DotNetCore_Demo
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseHsts();
+            }
+
+            app.UseHttpsRedirection();
 
             app.UseMiddleware<SerilogMiddleware>();
 

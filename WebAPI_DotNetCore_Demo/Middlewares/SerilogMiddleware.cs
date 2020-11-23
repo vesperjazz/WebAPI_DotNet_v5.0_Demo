@@ -16,7 +16,7 @@ namespace WebAPI_DotNetCore_Demo.Middlewares
 {
     public class SerilogMiddleware
     {
-        private const string MessageTemplate = "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms";
+        private const string MessageTemplate = "{RequestScheme} {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms";
 
         private string _requestBody;
         private string _responseBody;
@@ -51,8 +51,8 @@ namespace WebAPI_DotNetCore_Demo.Middlewares
                 _responseBody = string.IsNullOrWhiteSpace(_responseBody) ? null : _responseBody;
 
                 GetLoggerWithContext(httpContext, elapsedMs).Information(MessageTemplate,
-                    httpContext.Request.Method, GetPath(httpContext),
-                    httpContext.Response?.StatusCode, elapsedMs);
+                    GetRequestScheme(httpContext), httpContext.Request.Method, GetPath(httpContext),
+                    httpContext.Response?.StatusCode, elapsedMs); ;
 
                 await responseBody.CopyToAsync(originalResponseBodyStream);
             }
@@ -66,7 +66,7 @@ namespace WebAPI_DotNetCore_Demo.Middlewares
                 _responseBody = string.IsNullOrWhiteSpace(_responseBody) ? null : _responseBody;
 
                 GetLoggerWithContext(httpContext, elapsedMs).Error(ex, MessageTemplate,
-                    httpContext.Request.Method, GetPath(httpContext),
+                    GetRequestScheme(httpContext), httpContext.Request.Method, GetPath(httpContext),
                     httpContext.Response?.StatusCode, elapsedMs);
 
                 await responseBody.CopyToAsync(originalResponseBodyStream);
@@ -101,6 +101,11 @@ namespace WebAPI_DotNetCore_Demo.Middlewares
                         ErrorMessage = exception.Message
                     }));
             }
+        }
+
+        private static string GetRequestScheme(HttpContext httpContext)
+        {
+            return httpContext.Request.IsHttps ? "HTTPS" : "HTTP";
         }
 
         private ILogger GetLoggerWithContext(HttpContext httpContext, double elapsedMs)
